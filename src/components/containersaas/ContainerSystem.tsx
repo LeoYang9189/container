@@ -16,6 +16,14 @@ import BatchContainerMaintenancePage from './pages/BatchContainerMaintenancePage
 import AddDynamicPage from './pages/AddDynamicPage';
 import { Breadcrumb } from '@arco-design/web-react';
 import { Link } from 'react-router-dom';
+import CleaningManagementPage from './pages/CleaningManagementPage';
+import CleaningWorkOrderPage from './pages/CleaningWorkOrderPage';
+import RepairWorkOrderPage from './pages/RepairWorkOrderPage';
+import RepairWorkOrderEdit from './pages/RepairWorkOrderEdit';
+import TransferOrderPage from './pages/TransferOrderPage';
+import TransferOrderEdit from './pages/TransferOrderEdit';
+import ExitReservationEdit from './pages/ExitReservationEdit';
+import YardPlanningPage from './pages/YardPlanningPage';
 
 // 定义标题映射，用于显示面包屑
 const pageTitleMap: Record<string, { title: string, parent?: string }> = {
@@ -28,17 +36,21 @@ const pageTitleMap: Record<string, { title: string, parent?: string }> = {
   'container-management': { title: '集装箱管理', parent: '设备管理' },
   'chassis-management': { title: '车架管理', parent: '设备管理' },
   'trailer-management': { title: '拖车管理', parent: '设备管理' },
-  'repair-clean': { title: '修洗箱管理', parent: '设备维护' },
+  'repair-management': { title: '修箱管理', parent: '设备维护' },
+  'create': { title: '新增工作单', parent: '修箱管理' },
+  'edit': { title: '编辑工作单', parent: '修箱管理' },
+  'cleaning-management': { title: '洗箱管理', parent: '设备维护' },
   'release': { title: '放箱管理' },
   'entry-reservation': { title: '进场预约', parent: '预约管理' },
   'exit-reservation': { title: '出场预约', parent: '预约管理' },
-  'order': { title: '订单管理' },
+  'transfer-orders': { title: '调拨指令', parent: '订单管理' },
   'cost': { title: '费用管理' },
   'edi': { title: 'EDI中心' },
   'customer': { title: '客户中心' },
   'reporting': { title: '报表中心' },
   'dynamic-settings': { title: '动态设置', parent: '系统设置' },
   'system-config': { title: '系统配置', parent: '系统设置' },
+  'yard-planning': { title: '堆场规划', parent: '系统设置' },
   'yard-management': { title: '堆场管理', parent: '设备管理' },
 };
 
@@ -140,10 +152,50 @@ const ContainerSystem: React.FC = () => {
         } 
       />
       <Route 
-        path="/repair-clean" 
+        path="/repair-management" 
         element={
-          <ContainerLayout breadcrumb={generateBreadcrumb('/repair-clean')}>
-            <div className="bg-white p-6 rounded-lg shadow-sm">修洗箱管理页面</div>
+          <ContainerLayout breadcrumb={generateBreadcrumb('/repair-management')}>
+            <RepairWorkOrderPage />
+          </ContainerLayout>
+        } 
+      />
+      <Route 
+        path="/repair-management/create" 
+        element={
+          <ContainerLayout breadcrumb={generateBreadcrumb('/repair-management/create')}>
+            <RepairWorkOrderEdit />
+          </ContainerLayout>
+        } 
+      />
+      <Route 
+        path="/repair-management/edit/:id" 
+        element={
+          <ContainerLayout breadcrumb={generateBreadcrumb('/repair-management/edit')}>
+            <RepairWorkOrderEdit />
+          </ContainerLayout>
+        } 
+      />
+      <Route 
+        path="/cleaning-management" 
+        element={
+          <ContainerLayout breadcrumb={generateBreadcrumb('/cleaning-management')}>
+            <CleaningManagementPage />
+          </ContainerLayout>
+        } 
+      />
+      <Route 
+        path="/cleaning-management/add" 
+        element={
+          <ContainerLayout breadcrumb={generateBreadcrumb('/cleaning-management/add')}>
+            <CleaningWorkOrderPage />
+          </ContainerLayout>
+        } 
+      />
+      <Route 
+        path="/cleaning-management/edit/:id" 
+        element={
+          <ContainerLayout breadcrumb={generateBreadcrumb('/cleaning-management/edit')}>
+            <CleaningWorkOrderPage />
           </ContainerLayout>
         } 
       />
@@ -172,10 +224,42 @@ const ContainerSystem: React.FC = () => {
         } 
       />
       <Route 
-        path="/order" 
+        path="/exit-reservation/create" 
         element={
-          <ContainerLayout breadcrumb={generateBreadcrumb('/order')}>
-            <div className="bg-white p-6 rounded-lg shadow-sm">订单管理页面</div>
+          <ContainerLayout breadcrumb={generateBreadcrumb('/exit-reservation/create')}>
+            <ExitReservationEdit />
+          </ContainerLayout>
+        } 
+      />
+      <Route 
+        path="/exit-reservation/edit/:id" 
+        element={
+          <ContainerLayout breadcrumb={generateBreadcrumb('/exit-reservation/edit')}>
+            <ExitReservationEdit />
+          </ContainerLayout>
+        } 
+      />
+      <Route 
+        path="/transfer-orders" 
+        element={
+          <ContainerLayout breadcrumb={generateBreadcrumb('/transfer-orders')}>
+            <TransferOrderPage />
+          </ContainerLayout>
+        } 
+      />
+      <Route 
+        path="/transfer-orders/create" 
+        element={
+          <ContainerLayout breadcrumb={generateBreadcrumb('/transfer-orders/create')}>
+            <TransferOrderEdit />
+          </ContainerLayout>
+        } 
+      />
+      <Route 
+        path="/transfer-orders/edit/:id" 
+        element={
+          <ContainerLayout breadcrumb={generateBreadcrumb('/transfer-orders/edit')}>
+            <TransferOrderEdit />
           </ContainerLayout>
         } 
       />
@@ -224,6 +308,14 @@ const ContainerSystem: React.FC = () => {
         element={
           <ContainerLayout breadcrumb={generateBreadcrumb('/system-config')}>
             <SystemConfigPage />
+          </ContainerLayout>
+        } 
+      />
+      <Route 
+        path="/yard-planning" 
+        element={
+          <ContainerLayout breadcrumb={generateBreadcrumb('/yard-planning')}>
+            <YardPlanningPage />
           </ContainerLayout>
         } 
       />

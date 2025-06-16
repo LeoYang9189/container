@@ -97,6 +97,30 @@ interface InventorySummary {
   totalYards: number;
 }
 
+// 修洗箱统计数据接口
+interface RepairWashData {
+  key: string;
+  workOrderNo: string;
+  containerNo: string;
+  serviceType: '修箱' | '洗箱' | '改装';
+  status: '待施工' | '施工中' | '已完成' | '已验收';
+  customer: string;
+  yard: string;
+  startDate: string;
+  completedDate?: string;
+  cost: number;
+  remark?: string;
+}
+
+// 修洗箱统计汇总接口
+interface RepairWashSummary {
+  totalOrders: number;
+  completedOrders: number;
+  inProgressOrders: number;
+  totalCost: number;
+  avgCost: number;
+}
+
 const { Row, Col } = Grid;
 
 const ReportingPage: React.FC = () => {
@@ -104,6 +128,8 @@ const ReportingPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [inventoryData, setInventoryData] = useState<InventoryData[]>([]);
   const [inventorySummary, setInventorySummary] = useState<InventorySummary | null>(null);
+  const [repairWashData, setRepairWashData] = useState<RepairWashData[]>([]);
+  const [repairWashSummary, setRepairWashSummary] = useState<RepairWashSummary | null>(null);
   const [activeTab, setActiveTab] = useState('byYard');
 
   // 模拟库存数据
@@ -190,6 +216,110 @@ const ReportingPage: React.FC = () => {
     }
   ];
 
+  // 模拟修洗箱统计数据
+  const mockRepairWashData: RepairWashData[] = [
+    {
+      key: '1',
+      workOrderNo: 'CWO240001',
+      containerNo: 'CXDU1234567',
+      serviceType: '洗箱',
+      status: '已完成',
+      customer: '上海远洋运输有限公司',
+      yard: '长胜2堆场',
+      startDate: '2024-02-01',
+      completedDate: '2024-02-02',
+      cost: 800,
+      remark: '常规清洗'
+    },
+    {
+      key: '2',
+      workOrderNo: 'RWO240001',
+      containerNo: 'MSCU9876543',
+      serviceType: '修箱',
+      status: '已验收',
+      customer: '马士基航运',
+      yard: '东海物流园',
+      startDate: '2024-01-28',
+      completedDate: '2024-01-30',
+      cost: 2500,
+      remark: '门锁损坏维修'
+    },
+    {
+      key: '3',
+      workOrderNo: 'MWO240001',
+      containerNo: 'HLBU5555555',
+      serviceType: '改装',
+      status: '施工中',
+      customer: '赫伯罗特',
+      yard: '宝山重箱堆场',
+      startDate: '2024-02-01',
+      cost: 5000,
+      remark: '加装冷藏设备'
+    },
+    {
+      key: '4',
+      workOrderNo: 'CWO240002',
+      containerNo: 'COSU1111111',
+      serviceType: '洗箱',
+      status: '待施工',
+      customer: '中远海运',
+      yard: '长胜2堆场',
+      startDate: '2024-02-03',
+      cost: 600,
+      remark: '轻度污染清洗'
+    },
+    {
+      key: '5',
+      workOrderNo: 'RWO240002',
+      containerNo: 'PONU2222222',
+      serviceType: '修箱',
+      status: '已完成',
+      customer: '东方海外',
+      yard: '洋山港堆场',
+      startDate: '2024-01-29',
+      completedDate: '2024-01-31',
+      cost: 1800,
+      remark: '底板修复'
+    },
+    {
+      key: '6',
+      workOrderNo: 'CWO240003',
+      containerNo: 'YMLU3333333',
+      serviceType: '洗箱',
+      status: '施工中',
+      customer: '阳明海运',
+      yard: '东海物流园',
+      startDate: '2024-02-02',
+      cost: 900,
+      remark: '深度清洗除锈'
+    },
+    {
+      key: '7',
+      workOrderNo: 'MWO240002',
+      containerNo: 'HJMU4444444',
+      serviceType: '改装',
+      status: '已完成',
+      customer: '现代商船',
+      yard: '宝山重箱堆场',
+      startDate: '2024-01-25',
+      completedDate: '2024-01-28',
+      cost: 4200,
+      remark: '加装通风设备'
+    },
+    {
+      key: '8',
+      workOrderNo: 'RWO240003',
+      containerNo: 'EMCU5555555',
+      serviceType: '修箱',
+      status: '待施工',
+      customer: '长荣海运',
+      yard: '长胜2堆场',
+      startDate: '2024-02-04',
+      cost: 3200,
+      remark: '侧壁损坏维修'
+    }
+  ];
+
   // 生成报表
   const generateReport = (reportType: ReportType) => {
     setLoading(true);
@@ -208,6 +338,18 @@ const ReportingPage: React.FC = () => {
           totalYards: new Set(mockInventoryData.map(item => item.yard)).size
         };
         setInventorySummary(summary);
+      } else if (reportType === ReportType.REPAIR_WASH_CONTAINERS) {
+        setRepairWashData(mockRepairWashData);
+        
+        // 计算修洗箱统计数据
+        const summary: RepairWashSummary = {
+          totalOrders: mockRepairWashData.length,
+          completedOrders: mockRepairWashData.filter(item => item.status === '已完成' || item.status === '已验收').length,
+          inProgressOrders: mockRepairWashData.filter(item => item.status === '施工中').length,
+          totalCost: mockRepairWashData.reduce((sum, item) => sum + item.cost, 0),
+          avgCost: Math.round(mockRepairWashData.reduce((sum, item) => sum + item.cost, 0) / mockRepairWashData.length)
+        };
+        setRepairWashSummary(summary);
       }
       setLoading(false);
       Message.success('报表生成成功！');
@@ -595,9 +737,153 @@ const ReportingPage: React.FC = () => {
             )}
 
             {selectedReportType === ReportType.REPAIR_WASH_CONTAINERS && (
-              <div className="text-center py-20">
-                <div className="text-gray-500 text-lg mb-4">修洗箱统计报表</div>
-                <div className="text-gray-400">功能开发中，敬请期待...</div>
+              <div>
+                {/* 修洗箱统计概览 */}
+                {repairWashSummary && (
+                  <div className="mb-6">
+                    <Title heading={6} className="mb-4">修洗箱统计概览</Title>
+                    <Row gutter={16}>
+                      <Col span={5}>
+                        <Statistic
+                          title="总工单数"
+                          value={repairWashSummary.totalOrders}
+                          suffix="个"
+                        />
+                      </Col>
+                                             <Col span={5}>
+                         <div style={{ color: '#00B42A' }}>
+                           <Statistic
+                             title="已完成"
+                             value={repairWashSummary.completedOrders}
+                             suffix="个"
+                           />
+                         </div>
+                       </Col>
+                       <Col span={5}>
+                         <div style={{ color: '#FF7D00' }}>
+                           <Statistic
+                             title="施工中"
+                             value={repairWashSummary.inProgressOrders}
+                             suffix="个"
+                           />
+                         </div>
+                       </Col>
+                       <Col span={5}>
+                         <div style={{ color: '#165DFF' }}>
+                           <Statistic
+                             title="总费用"
+                             value={repairWashSummary.totalCost}
+                             prefix="¥"
+                           />
+                         </div>
+                       </Col>
+                      <Col span={4}>
+                        <Statistic
+                          title="平均费用"
+                          value={repairWashSummary.avgCost}
+                          prefix="¥"
+                        />
+                      </Col>
+                    </Row>
+                    <Divider />
+                  </div>
+                )}
+
+                {/* 修洗箱明细表格 */}
+                <Table
+                  columns={[
+                    {
+                      title: '工单号',
+                      dataIndex: 'workOrderNo',
+                      width: 120,
+                      render: (text: string) => (
+                        <span style={{ fontFamily: 'monospace', fontSize: '13px' }}>{text}</span>
+                      )
+                    },
+                    {
+                      title: '箱号',
+                      dataIndex: 'containerNo',
+                      width: 140,
+                      render: (text: string) => (
+                        <span style={{ fontFamily: 'monospace', fontSize: '13px' }}>{text}</span>
+                      )
+                    },
+                    {
+                      title: '服务类型',
+                      dataIndex: 'serviceType',
+                      width: 100,
+                      render: (type: string) => {
+                        const colorMap = {
+                          '修箱': 'red',
+                          '洗箱': 'blue',
+                          '改装': 'orange'
+                        };
+                        return <Tag color={colorMap[type as keyof typeof colorMap]}>{type}</Tag>;
+                      }
+                    },
+                    {
+                      title: '状态',
+                      dataIndex: 'status',
+                      width: 100,
+                      render: (status: string) => {
+                        const statusConfig = {
+                          '待施工': { color: 'gray', text: '待施工' },
+                          '施工中': { color: 'orange', text: '施工中' },
+                          '已完成': { color: 'green', text: '已完成' },
+                          '已验收': { color: 'blue', text: '已验收' }
+                        };
+                        const config = statusConfig[status as keyof typeof statusConfig];
+                        return <Tag color={config.color}>{config.text}</Tag>;
+                      }
+                    },
+                    {
+                      title: '客户',
+                      dataIndex: 'customer',
+                      width: 180
+                    },
+                    {
+                      title: '堆场',
+                      dataIndex: 'yard',
+                      width: 120
+                    },
+                    {
+                      title: '开始日期',
+                      dataIndex: 'startDate',
+                      width: 110
+                    },
+                    {
+                      title: '完成日期',
+                      dataIndex: 'completedDate',
+                      width: 110,
+                      render: (date: string | undefined) => date || '-'
+                    },
+                    {
+                      title: '费用',
+                      dataIndex: 'cost',
+                      width: 100,
+                      render: (cost: number) => (
+                        <span className="font-medium text-blue-600">¥{cost.toLocaleString()}</span>
+                      )
+                    },
+                    {
+                      title: '备注',
+                      dataIndex: 'remark',
+                      width: 150,
+                      render: (remark: string | undefined) => remark || '-'
+                    }
+                  ]}
+                  data={repairWashData}
+                  pagination={{
+                    showTotal: true,
+                    pageSize: 10,
+                    showJumper: true
+                  }}
+                  scroll={{ x: 1200 }}
+                  border={{
+                    wrapper: true,
+                    cell: true
+                  }}
+                />
               </div>
             )}
 

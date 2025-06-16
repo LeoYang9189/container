@@ -115,7 +115,8 @@ const ContainerSidebar: React.FC<ContainerSidebarProps> = ({ collapsed }) => {
             </span>
           }
         >
-          <MenuItem key="repair-clean">修洗箱管理</MenuItem>
+          <MenuItem key="repair-management">修箱管理</MenuItem>
+          <MenuItem key="cleaning-management">洗箱管理</MenuItem>
         </SubMenu>
         
         <MenuItem key="release">
@@ -136,10 +137,17 @@ const ContainerSidebar: React.FC<ContainerSidebarProps> = ({ collapsed }) => {
           <MenuItem key="exit-reservation">出场预约</MenuItem>
         </SubMenu>
         
-        <MenuItem key="order">
-          <IconFile className="mr-2" />
-          <span>订单管理</span>
-        </MenuItem>
+        <SubMenu
+          key="order-sub"
+          title={
+            <span>
+              <IconFile className="mr-2" />
+              <span>订单管理</span>
+            </span>
+          }
+        >
+          <MenuItem key="transfer-orders">调拨指令</MenuItem>
+        </SubMenu>
         
         <MenuItem key="cost">
           <IconSettings className="mr-2" />
@@ -176,6 +184,7 @@ const ContainerSidebar: React.FC<ContainerSidebarProps> = ({ collapsed }) => {
         >
           <MenuItem key="dynamic-settings">动态设置</MenuItem>
           <MenuItem key="system-config">系统配置</MenuItem>
+          <MenuItem key="yard-planning">堆场规划</MenuItem>
         </SubMenu>
       </Menu>
 

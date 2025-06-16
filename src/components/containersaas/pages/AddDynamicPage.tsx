@@ -11,16 +11,23 @@ import {
   Typography,
   Steps,
   Space,
-  Descriptions
+  Descriptions,
+  Upload,
+  Modal,
+  Image
 } from '@arco-design/web-react';
 import {
   IconLeft,
   IconSave,
   IconRefresh,
   IconArchive,
-  IconCheck
+  IconCheck,
+  IconPlus,
+  IconDelete,
+  IconEye
 } from '@arco-design/web-react/icon';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import './AddDynamicPage.css';
 
 const { Option } = Select;
 const { Title, Text } = Typography;
@@ -50,6 +57,14 @@ const dynamicCodeOptions = [
   { value: 'STORAGE', label: 'STORAGE - 入库' }
 ];
 
+// 添加照片上传相关的接口
+interface UploadFile {
+  uid: string;
+  name: string;
+  url: string;
+  status: 'init' | 'uploading' | 'done' | 'error';
+}
+
 const AddDynamicPage: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -59,6 +74,12 @@ const AddDynamicPage: React.FC = () => {
   const [containerInfo, setContainerInfo] = useState<ContainerInfo | null>(null);
   const [loading, setLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
+
+  // 添加照片上传状态
+  const [handoverPhotos, setHandoverPhotos] = useState<UploadFile[]>([]);
+  const [entryPhotos, setEntryPhotos] = useState<UploadFile[]>([]);
+  const [previewVisible, setPreviewVisible] = useState(false);
+  const [previewImage, setPreviewImage] = useState('');
 
   // 页面加载时获取集装箱信息
   useEffect(() => {
@@ -132,10 +153,56 @@ const AddDynamicPage: React.FC = () => {
     setCurrentStep(0);
   };
 
-  // 保存动态
+  // 处理照片预览
+  const handlePreview = (file: UploadFile) => {
+    setPreviewImage(file.url);
+    setPreviewVisible(true);
+  };
+
+  // 处理照片上传
+  const handleUpload = async (file: File, type: 'handover' | 'entry') => {
+    // 这里应该调用实际的上传API
+    // 目前使用模拟上传
+    return new Promise<UploadFile>((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const url = e.target?.result as string;
+        const uploadFile: UploadFile = {
+          uid: Math.random().toString(36).slice(2),
+          name: file.name,
+          url,
+          status: 'done'
+        };
+        resolve(uploadFile);
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  // 处理照片删除
+  const handleRemove = (file: UploadFile, type: 'handover' | 'entry') => {
+    if (type === 'handover') {
+      setHandoverPhotos(prev => prev.filter(f => f.uid !== file.uid));
+    } else {
+      setEntryPhotos(prev => prev.filter(f => f.uid !== file.uid));
+    }
+  };
+
+  // 修改保存函数，添加上传照片的验证
   const handleSave = async () => {
     try {
       await form.validate();
+      
+      // 验证照片上传
+      if (handoverPhotos.length === 0) {
+        Message.error('请上传设备交接单照片');
+        return;
+      }
+      if (entryPhotos.length === 0) {
+        Message.error('请上传进场照片');
+        return;
+      }
+
       setLoading(true);
       
       // 模拟保存API调用
@@ -312,25 +379,90 @@ const AddDynamicPage: React.FC = () => {
                 </Form.Item>
               </div>
 
-              {/* 操作按钮 */}
-              <div style={{ marginTop: '32px', textAlign: 'center' }}>
-                <Space size="large">
-                  <Button 
-                    icon={<IconRefresh />} 
-                    onClick={handleReset}
-                  >
-                    重置
-                  </Button>
-                  <Button 
-                    type="primary" 
-                    icon={<IconSave />} 
-                    onClick={handleSave}
-                    loading={loading}
-                    size="large"
-                  >
-                    保存动态
-                  </Button>
-                </Space>
+              {/* 添加照片上传区域 */}
+              <div style={{ marginTop: '24px', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px' }}>
+                <Form.Item
+                  label="设备交接单照片"
+                  field="handoverPhotos"
+                  rules={[{ required: true, message: '请上传设备交接单照片' }]}
+                >
+                  <div className="upload-list">
+                    <Upload
+                      listType="picture-card"
+                      fileList={handoverPhotos}
+                      customRequest={async (option) => {
+                        const file = option.file as File;
+                        const uploadFile = await handleUpload(file, 'handover');
+                        setHandoverPhotos(prev => [...prev, uploadFile]);
+                        option.onSuccess?.();
+                      }}
+                      onRemove={(file) => handleRemove(file as UploadFile, 'handover')}
+                      limit={5}
+                      imagePreview={false}
+                      onChange={(_, currentFile) => {
+                        if (currentFile.status === 'done') {
+                          handlePreview(currentFile as UploadFile);
+                        }
+                      }}
+                    >
+                      <div className="upload-trigger">
+                        <IconPlus />
+                        <div style={{ marginTop: 8 }}>上传照片</div>
+                      </div>
+                    </Upload>
+                  </div>
+                </Form.Item>
+
+                <Form.Item
+                  label="进场照片"
+                  field="entryPhotos"
+                  rules={[{ required: true, message: '请上传进场照片' }]}
+                >
+                  <div className="upload-list">
+                    <Upload
+                      listType="picture-card"
+                      fileList={entryPhotos}
+                      customRequest={async (option) => {
+                        const file = option.file as File;
+                        const uploadFile = await handleUpload(file, 'entry');
+                        setEntryPhotos(prev => [...prev, uploadFile]);
+                        option.onSuccess?.();
+                      }}
+                      onRemove={(file) => handleRemove(file as UploadFile, 'entry')}
+                      limit={5}
+                      imagePreview={false}
+                      onChange={(_, currentFile) => {
+                        if (currentFile.status === 'done') {
+                          handlePreview(currentFile as UploadFile);
+                        }
+                      }}
+                    >
+                      <div className="upload-trigger">
+                        <IconPlus />
+                        <div style={{ marginTop: 8 }}>上传照片</div>
+                      </div>
+                    </Upload>
+                  </div>
+                </Form.Item>
+              </div>
+
+              {/* 照片预览模态框 */}
+              <Modal
+                visible={previewVisible}
+                footer={null}
+                onCancel={() => setPreviewVisible(false)}
+              >
+                <img alt="预览图片" style={{ width: '100%' }} src={previewImage} />
+              </Modal>
+
+              {/* 表单按钮 */}
+              <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+                <Button icon={<IconRefresh />} onClick={handleReset}>
+                  重置
+                </Button>
+                <Button type="primary" icon={<IconSave />} onClick={handleSave} loading={loading}>
+                  保存
+                </Button>
               </div>
             </Form>
           </Card>
