@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Divider, Space } from '@arco-design/web-react';
+import { Typography, Divider } from '@arco-design/web-react';
 import { format } from 'date-fns';
 import { QRCodeSVG } from 'qrcode.react';
 

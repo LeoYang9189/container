@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, Upload, Button, Space, Modal, Message, Progress } from '@arco-design/web-react';
+import { Card, Upload, Button, Modal, Message, Progress } from '@arco-design/web-react';
 import { IconPlus, IconDelete, IconEye } from '@arco-design/web-react/icon';
 import type { UploadItem, UploadProps } from '@arco-design/web-react/es/Upload';
 
@@ -97,35 +97,7 @@ const RepairPhotos: React.FC<RepairPhotosProps> = ({
     }
   };
 
-  const handleUploadSuccess = (uid: string, url: string) => {
-    const newPhotos = photos.map(photo => {
-      if (photo.uid === uid) {
-        return {
-          ...photo,
-          url,
-          status: 'done' as const,
-          progress: 100
-        };
-      }
-      return photo;
-    });
-    setPhotos(newPhotos);
-    onChange(newPhotos);
-  };
 
-  const handleUploadError = (uid: string) => {
-    const newPhotos = photos.map(photo => {
-      if (photo.uid === uid) {
-        return {
-          ...photo,
-          status: 'error' as const
-        };
-      }
-      return photo;
-    });
-    setPhotos(newPhotos);
-    onChange(newPhotos);
-  };
 
   // 预览照片
   const handlePreview = (file: UploadItem) => {
@@ -141,17 +113,7 @@ const RepairPhotos: React.FC<RepairPhotosProps> = ({
     Message.success('删除成功');
   };
 
-  // 更新照片类别
-  const handleCategoryChange = (uid: string, category: 'BEFORE' | 'AFTER') => {
-    const newPhotos = photos.map(photo => {
-      if (photo.uid === uid) {
-        return { ...photo, category };
-      }
-      return photo;
-    });
-    setPhotos(newPhotos);
-    onChange(newPhotos);
-  };
+
 
   // 上传组件配置
   const uploadProps: UploadProps = {

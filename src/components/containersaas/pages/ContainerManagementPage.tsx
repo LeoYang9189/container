@@ -29,8 +29,6 @@ import {
   IconDragDotVertical
 } from '@arco-design/web-react/icon';
 import '@arco-design/web-react/dist/css/arco.css';
-// import SaasLayout from '../../saas/SaasLayout'; // Assuming ContainerLayout will be used via routing
-import '../../../components/saas/InquiryManagement.css'; // For common table styles if applicable
 
 const { Title } = Typography;
 const { Option } = Select;

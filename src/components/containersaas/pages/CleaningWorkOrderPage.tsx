@@ -17,19 +17,19 @@ import {
 import {
   IconSave,
   IconRefresh,
-  IconLeft,
+
   IconPrinter,
   IconExclamationCircle
 } from '@arco-design/web-react/icon';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getCleaningWorkOrder, createCleaningWorkOrder, updateCleaningWorkOrder } from '../../../services/api';
+
 import CleaningCost from '../components/CleaningCost';
 import CleaningPhotos from '../components/CleaningPhotos';
 import CleaningProgress from '../components/CleaningProgress';
 import CleaningVerification from '../components/CleaningVerification';
 import CleaningWorkOrderPrint from '../components/CleaningWorkOrderPrint';
 
-const { Title } = Typography;
+const { } = Typography;
 const { Option } = Select;
 const { Row, Col } = Grid;
 
@@ -174,7 +174,7 @@ const CleaningWorkOrderPage: React.FC = () => {
   };
 
   // 模拟获取集装箱当前堆场
-  const getContainerCurrentYard = async (containerNo: string) => {
+  const getContainerCurrentYard = async (_: string) => {
     // 这里应该调用实际的 API，现在用模拟数据
     return '上海外高桥堆场';
   };

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Card, Timeline, Form, Input, Button, Space, Typography, Select, DatePicker, Message } from '@arco-design/web-react';
+import { Card, Timeline, Form, Input, Button, Space, Typography, Select, Message } from '@arco-design/web-react';
 import { IconPlus, IconDelete } from '@arco-design/web-react/icon';
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 const { Option } = Select;
 
 // 进度状态选项
@@ -27,7 +27,6 @@ interface CleaningProgressProps {
 }
 
 const CleaningProgress: React.FC<CleaningProgressProps> = ({
-  workOrderId,
   onProgressChange
 }) => {
   const [progress, setProgress] = useState<ProgressItem[]>([]);

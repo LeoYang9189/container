@@ -14,7 +14,7 @@ import {
   Descriptions,
   Upload,
   Modal,
-  Image
+
 } from '@arco-design/web-react';
 import {
   IconLeft,
@@ -23,8 +23,8 @@ import {
   IconArchive,
   IconCheck,
   IconPlus,
-  IconDelete,
-  IconEye
+
+
 } from '@arco-design/web-react/icon';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import './AddDynamicPage.css';
@@ -160,7 +160,7 @@ const AddDynamicPage: React.FC = () => {
   };
 
   // 处理照片上传
-  const handleUpload = async (file: File, type: 'handover' | 'entry') => {
+  const handleUpload = async (file: File) => {
     // 这里应该调用实际的上传API
     // 目前使用模拟上传
     return new Promise<UploadFile>((resolve) => {
@@ -392,7 +392,7 @@ const AddDynamicPage: React.FC = () => {
                       fileList={handoverPhotos}
                       customRequest={async (option) => {
                         const file = option.file as File;
-                        const uploadFile = await handleUpload(file, 'handover');
+                        const uploadFile = await handleUpload(file);
                         setHandoverPhotos(prev => [...prev, uploadFile]);
                         option.onSuccess?.();
                       }}
@@ -424,7 +424,7 @@ const AddDynamicPage: React.FC = () => {
                       fileList={entryPhotos}
                       customRequest={async (option) => {
                         const file = option.file as File;
-                        const uploadFile = await handleUpload(file, 'entry');
+                        const uploadFile = await handleUpload(file);
                         setEntryPhotos(prev => [...prev, uploadFile]);
                         option.onSuccess?.();
                       }}

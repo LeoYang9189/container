@@ -22,7 +22,7 @@ import {
 } from '@arco-design/web-react/icon';
 import { useNavigate } from 'react-router-dom';
 
-const { Title } = Typography;
+const { } = Typography;
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
@@ -59,7 +59,7 @@ const CleaningManagementPage: React.FC = () => {
   // 搜索
   const handleSearch = async () => {
     try {
-      const values = await form.validate();
+      await form.validate();
       setLoading(true);
       // 模拟API调用
       setTimeout(() => {
@@ -271,7 +271,7 @@ const CleaningManagementPage: React.FC = () => {
           border={false}
           rowSelection={{
             type: 'checkbox',
-            onChange: (selectedRowKeys, selectedRows) => {
+            onChange: (_, selectedRows) => {
               setSelectedRows(selectedRows);
             }
           }}

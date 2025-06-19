@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, Upload, Button, Space, Typography, Modal, Image, Message } from '@arco-design/web-react';
+import { Card, Upload, Button, Typography, Modal, Image, Message } from '@arco-design/web-react';
 import { IconPlus, IconDelete, IconEye } from '@arco-design/web-react/icon';
 
 const { Title, Text } = Typography;

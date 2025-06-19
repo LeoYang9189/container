@@ -29,7 +29,6 @@ interface CleaningCostProps {
 }
 
 const CleaningCost: React.FC<CleaningCostProps> = ({
-  workOrderId,
   cleaningItems,
   onCostChange
 }) => {

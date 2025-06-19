@@ -25,7 +25,6 @@ interface CleaningVerificationProps {
 }
 
 const CleaningVerification: React.FC<CleaningVerificationProps> = ({
-  workOrderId,
   onVerificationChange
 }) => {
   const [form] = Form.useForm();
