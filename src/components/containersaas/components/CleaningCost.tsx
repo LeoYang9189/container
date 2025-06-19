@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Table, Form, InputNumber, Button, Space, Typography, Divider, Input } from '@arco-design/web-react';
-import { IconPlus, IconDelete, IconSave } from '@arco-design/web-react/icon';
+import { Card, Table, InputNumber, Button, Space, Typography, Divider, Input } from '@arco-design/web-react';
+import { IconPlus, IconDelete } from '@arco-design/web-react/icon';
 
 const { Title, Text } = Typography;
 

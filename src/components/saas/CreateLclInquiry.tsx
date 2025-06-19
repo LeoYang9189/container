@@ -25,7 +25,6 @@ const FormItem = Form.Item;
 const Option = Select.Option;
 const RadioGroup = Radio.Group;
 
-// @ts-expect-error - 暂时未使用的变量，避免linter警告
 const provinceOptions = [
   { value: '浙江省', label: '浙江省' },
   { value: '江苏省', label: '江苏省' },
@@ -35,7 +34,6 @@ const provinceOptions = [
   { value: '黑龙江省', label: '黑龙江省' },
   { value: '新疆维吾尔自治区', label: '新疆维吾尔自治区' },
 ];
-// @ts-expect-error - 暂时未使用的变量，避免linter警告
 const cityOptions = {
   '浙江省': [
     { value: '杭州市', label: '杭州市' },
@@ -58,7 +56,6 @@ const cityOptions = {
     { value: '深圳市', label: '深圳市' },
   ],
 };
-// @ts-expect-error - 暂时未使用的变量，避免linter警告
 const districtOptions = {
   '杭州市': [
     { value: '萧山区', label: '萧山区' },
@@ -78,7 +75,6 @@ const districtOptions = {
     { value: '黄浦区', label: '黄浦区' },
   ],
 };
-// @ts-expect-error - 暂时未使用的变量，避免linter警告
 const streetOptions = {
   '萧山区': [
     { value: '新塘街道', label: '新塘街道' },
@@ -269,7 +265,6 @@ const CreateLclInquiry: React.FC = () => {
   // 负责人弹窗
   const [managerSelectVisible, setManagerSelectVisible] = useState(false);
   const [selectedLastMileManager, setSelectedLastMileManager] = useState('');
-  // @ts-expect-error - 暂时未使用，保留以便将来实现更完整的功能
   const [selectedMainlineManager, setSelectedMainlineManager] = useState('');
   
   // 运价详情弹窗状态
